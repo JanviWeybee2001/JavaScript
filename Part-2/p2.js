@@ -140,10 +140,16 @@ const totalss = [];
 
 console.log(`Bill ${billss}`);
 
-for (let i = 0; i < billss.length; i++) {
+for (i in billss)
+{
     tipss[i] = tip(billss[i]);
     totalBills[i] = tipss[i] + billss[i];
 }
+
+// for (let i = 0; i < billss.length; i++) {
+//     tipss[i] = tip(billss[i]);
+//     totalBills[i] = tipss[i] + billss[i];
+// }
 
 console.log(`Tips ${tipss}`);
 console.log(`TotalBill ${totalBills}`);

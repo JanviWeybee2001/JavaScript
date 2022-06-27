@@ -10,18 +10,21 @@
 
 // const a = () => console.log(2 );
 
+const maxNumber = 10;
+const minNumber = 1;
 
 document.querySelector('.number').textContent = "?";
 
-let secretNumber = Math.trunc(Math.random() * 20) + 1;
+let secretNumber = Math.trunc(Math.random() * maxNumber) + 1;
 console.log(secretNumber);
+document.querySelector('.score').textContent = maxNumber;
+document.querySelector('.between').textContent = `(Between ${minNumber} and ${maxNumber})`;
+
 let score = Number(document.querySelector('.score').textContent);
 let highscore = Number(document.querySelector('.highscore').textContent);
 
-document.querySelector('.check').addEventListener('click', function () {
+function checkSecretNumber () {
     const guess = Number(document.querySelector('.guess').value);
-    // console.log(typeof guess);
-
     if (!guess) {
         document.querySelector('.message').textContent = 'No Number !!';
     }
@@ -54,8 +57,15 @@ document.querySelector('.check').addEventListener('click', function () {
             document.querySelector('.score').textContent = 0;
         }
     }
+}
+
+document.querySelector('.guess').addEventListener('change', function () {
+    checkSecretNumber();
 });
 
+document.querySelector('.check').addEventListener('click', function () {
+    checkSecretNumber();
+});
 
 
 document.querySelector('.again').addEventListener('click', function () {
@@ -64,7 +74,7 @@ document.querySelector('.again').addEventListener('click', function () {
     document.querySelector('.number').style.width = '15rem';
     document.querySelector(".guess").textContent = " ";
     document.querySelector('.number').textContent = "?";
-    secretNumber = Math.trunc(Math.random() * 20) + 1;
+    secretNumber = Math.trunc(Math.random() * maxNumber) + 1;
     console.log(secretNumber);
 });
 

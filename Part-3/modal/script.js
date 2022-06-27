@@ -10,6 +10,9 @@ const closeModal = () => {
     overlay.classList.add('hidden');
 };
 
+let buttons = '<button class="show-modal">1</button><button class="show-modal">2</button><button class="show-modal">3</button>';
+
+
 console.log(btnsOpenModal);
 
 for (let i = 0; i < btnsOpenModal.length; i++) {

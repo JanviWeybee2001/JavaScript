@@ -53,31 +53,31 @@
 // // document.body.addEventListener('click',high5);
 
 
-// // const str = 'my_name%is**Janvi^desai';
-// // console.log(str);
+// const str = 'my_name%is**Janvi^desai';
+// console.log(str);
 
-// // let index = 0;
-// // let len = str.length;
-// // let finalStr = '';
+// let index = 0;
+// let len = str.length;
+// let finalStr = '';
 
-// // for(let i=0;i<len;i++)
-// // {
-// //     if((str[i]>='a' && str[i]<='z') || (str[i]>='A' && str[i]<='Z'))
-// //     {
-// //         if(index%2==0){
-// //             finalStr += str[i].toUpperCase();
-// //         }
-// //         else{
-// //             finalStr += str[i].toLowerCase();
-// //         }
-// //         index++;
-// //     }
-// //     else
-// //     {
-// //         finalStr += str[i];
-// //     }
-// // }
-// // console.log(finalStr);
+// for(let i=0;i<len;i++)
+// {
+//     if((str[i]>='a' && str[i]<='z') || (str[i]>='A' && str[i]<='Z'))
+//     {
+//         if(index%2==0){
+//             finalStr += str[i].toUpperCase();
+//         }
+//         else{
+//             finalStr += str[i].toLowerCase();
+//         }
+//         index++;
+//     }
+//     else
+//     {
+//         finalStr += str[i];
+//     }
+// }
+// console.log(finalStr);
 
 
 // // const arrIndex = new Set;
@@ -93,21 +93,21 @@
 // // const Answer = str.replaceAll(' ','');
 // // let tempStr = '';
 
-// // for(let i=0;i<Answer.length;i++)
-// // {
-// //     if(i%2 == 0)
-// //         tempStr += Answer[i].toUpperCase();
-// //     else
-// //         tempStr += Answer[i].toLowerCase();
-// // }
-// // let finalAnswer = tempStr.slice(0,arr[0]);
-// // let len = arr.length;
-// // for(let i = 0; i< len; i++)
-// // {
-// //     finalAnswer += ' ' + tempStr.slice(arr[i]-i,arr[i+1]-i-1);
-// // }
-// // finalAnswer+=tempStr.slice(arr[len-1]-len+1);
-// // console.log(finalAnswer);
+// for(let i=0;i<Answer.length;i++)
+// {
+//     if(i%2 == 0)
+//         tempStr += Answer[i].toUpperCase();
+//     else
+//         tempStr += Answer[i].toLowerCase();
+// }
+// let finalAnswer = tempStr.slice(0,arr[0]);
+// let len = arr.length;
+// for(let i = 0; i< len; i++)
+// {
+//     finalAnswer += ' ' + tempStr.slice(arr[i]-i,arr[i+1]-i-1);
+// }
+// finalAnswer+=tempStr.slice(arr[len-1]-len+1);
+// console.log(finalAnswer);
 
 
 // // const str = 'my name is janvi Desai';

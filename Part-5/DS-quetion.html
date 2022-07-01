@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        button {
+            font-size: 20px;
+        }
+
+        button:hover {
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="division">
+        <textarea name="text" id="text" cols="30" rows="10"></textarea>
+        <br>
+        <button>Click me!!</button>
+    </div>
+
+    <script>
+        const btn = document.querySelector('button');
+
+        function returnAnswer() {
+            const str = String(document.querySelector('textarea').value);
+            console.log(str);
+            let index = 0;
+            let len = str.length;
+            let finalStr = '';
+
+            for (let i = 0; i < len; i++) {
+                if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) {
+                    if (index % 2 == 0) {
+                        finalStr += str[i].toUpperCase();
+                    }
+                    else {
+                        finalStr += str[i].toLowerCase();
+                    }
+                    index++;
+                }
+                else {
+                    finalStr += str[i];
+                }
+            }
+            alert(finalStr);
+            console.log(finalStr);
+        }
+
+        btn.addEventListener('click',returnAnswer);
+    </script>
+</body>
+
+</html>

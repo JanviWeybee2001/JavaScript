@@ -1,5 +1,7 @@
 'use strict';
 
+const Euro = '€';
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // BANKIST APP
@@ -61,49 +63,153 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, index) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, index) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${index + 1} ${type}</div>
-    <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov}${Euro}</div>
     </div>
   `;
 
-  containerMovements.insertAdjacentHTML('afterbegin', html)
+    containerMovements.insertAdjacentHTML('afterbegin', html)
     // console.log(containerMovements.innerHTML);
   });
 };
 
-displayMovements(account1.movements);
+const calcPrintBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, cur) => acc + cur, 0);
+  labelBalance.textContent = `${acc.balance}${Euro}`;
+}
+
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumIn.textContent = `${incomes}${Euro}`;
+
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumOut.textContent = `${Math.abs(out)}${Euro}`;
+
+  const insert = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter(int => int > 1)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumInterest.textContent = `${insert}${Euro}`
+}
 
 
 const createUsernames = accs => {
-  accs.forEach( acc => {
+  accs.forEach(acc => {
     acc.userName = acc.owner
-    .toLowerCase()
-    .split(' ')
-    .map(name => name[0])
-    .join('')
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('')
   });
 };
 
-createUsernames(accounts);
-console.log(accounts);
 
-const balance = accounts.forEach( acc => {
-  console.log(acc.movements);
+createUsernames(accounts);
+
+const updateUI = function (acc) {
+  // Display movements
+  displayMovements(acc.movements);
+
+  // Display balance
+  calcPrintBalance(acc);
+
+  // Display summary
+  calcDisplaySummary(acc);
+}
+
+// Event Handler
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+
+
+  currentAccount = accounts.find(acc => acc.userName === inputLoginUsername.value);
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+    containerApp.style.opacity = 100;
+
+    // clear input feilds
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    updateUI(currentAccount);
+  }
 });
 
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
 
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(acc => acc.userName === inputTransferTo.value);
 
-// labelBalance.innerHTML = 
+  if (amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc.userName !== currentAccount.userName) {
+    // doing transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+    updateUI(currentAccount);
+  }
 
-// const balance = movements.reduce((acc, cur) =>acc + cur,0);
-// console.log(balance); 
+  inputTransferAmount.value = inputTransferTo.value = '';
+});
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 &&
+    currentAccount.movements.some(mov => mov >= mov * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+})
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (inputCloseUsername.value === currentAccount.userName &&
+    Number(inputClosePin.value) === currentAccount.pin) {
+    const index = accounts.findIndex(acc => acc.userName === currentAccount.userName);
+    accounts.splice(index, 1);
+    console.log(accounts);
+    containerApp.style.opacity = 0;
+  }
+  labelWelcome.textContent = `Log in to get started`;
+});
+
+let sorted = false;
+
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted
+})
+
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -251,3 +357,158 @@ console.log(withdrawals);
 //   return acc+ cur;
 // },0);
 
+// Maximum Value
+
+// const max = movements.reduce((acc,mov) => {
+//    if(acc>mov) return acc;
+//    else return mov;
+// },movements[0]);
+
+// console.log(max);
+
+
+/*
+//  CODING CHALLENGE 2
+
+const calcAverageHumanAge = data => {
+  return data.map(age => age <= 2 ? 2*age : 16+age*4);
+};
+
+const testData1 = [5,2,4,1,15,8,3];
+const testData2 = [16,6,10,5,6,1,4];
+
+const humanAge1 = [].concat(calcAverageHumanAge(testData1));
+const humanAge2 = [].concat(calcAverageHumanAge(testData2));
+
+const adultHuman = humanAge => humanAge.filter(age => age >= 18);
+const adultHuman1 = [].concat(adultHuman(humanAge1));
+const adultHuman2 = [].concat(adultHuman(humanAge2));
+
+const averageHuman = humanAge => humanAge.reduce((acc, age) => acc+age,0)/humanAge.length;
+const averageHumanAge1 = averageHuman(adultHuman1);
+const averageHumanAge2 = averageHuman(adultHuman2);
+console.log(`-------------TEST DATA 1-------------`);
+console.log(testData1);
+console.log(humanAge1);
+console.log(averageHumanAge1);
+console.log(adultHuman1);
+
+console.log(`-------------TEST DATA 2-------------`);
+console.log(testData2);
+console.log(humanAge2);
+console.log(averageHumanAge2);
+console.log(adultHuman2);
+
+
+// CHALLENGE 2 COMPLETED
+
+*/
+
+// const deposited = movements.filter(mov => mov > 0).reduce((acc, cur) => acc + cur, 0);
+// console.log(deposited);
+
+
+/*
+//  CODING CHALLENGE 3
+
+
+const testData1 = [5, 2, 4, 1, 15, 8, 3];
+const testData2 = [16, 6, 10, 5, 6, 1, 4];
+
+const calcAverageHumanAge = ages => ages
+  .map(age => age <= 2 ? age * 2 : 16 + age * 4)
+  .filter(age => age >= 18)
+  .reduce((acc, cur, _, arr) => acc+cur/arr.length,0);
+
+console.log(calcAverageHumanAge(testData1));
+console.log(calcAverageHumanAge(testData2));
+
+// CHALLENGE 3 COMPLETED
+
+*/
+
+
+console.log(movements);
+
+// EQUALITY
+console.log(movements.includes(-130));
+
+//SOME: CONDITION
+console.log(movements.some(mov => mov < 0));
+
+const anyDeposit = movements.some(mov => mov > 0);
+console.log(anyDeposit);
+
+// EVERY
+const everyDeposit = movements.every(mov => mov > 0);
+console.log(everyDeposit);
+
+// Separate callback
+const deposit = mov => mov < 0;
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
+
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+/*
+for(let i=0;i<a.length;i++)
+    { 
+        if(a[i].length > 1) 
+        {
+            for(let j=0;j<a[i].length;j++)
+            {
+                console.log(a[i][j]);
+            }
+        }
+        else 
+        {
+            console.log(a[i]);
+        }
+    }
+*/
+
+const arrdeep = [[[1, 2], 3], [4, [5, 6]], [7], 8];
+console.log(arrdeep.flat(2));
+
+console.log(movements);
+movements.push(300);
+console.log(movements.sort());
+
+
+// /*
+//  CODING CHALLENGE 4
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] }
+];
+
+//1. 
+const recommendedAllFood = dogs => {
+  dogs.forEach(dog => dog.recFood = Math.trunc(dog.weight ** 0.75 * 28));
+};
+
+recommendedAllFood(dogs);
+console.log(dogs);
+
+//2. 
+const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(sarahDog);
+
+console.log(`Sarah's dog is eating Too ${sarahDog.curFood>sarahDog.recFood?'Much':'Little'}`);
+
+//3. 
+const ownerTooMuch = dogs.filter(dog => dog.curFood > dog.recFood);
+const ownerTooLittle = dogs.filter(dog => dog.curFood < dog.recFood);
+console.log(ownerTooMuch);
+console.log(ownerTooLittle);
+
+//4.
+
+
+// CHALLENGE 4 COMPLETED
+
+// */

@@ -476,14 +476,15 @@ movements.push(300);
 console.log(movements.sort());
 
 
-// /*
+ /*
 //  CODING CHALLENGE 4
 
 const dogs = [
   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
   { weight: 8, curFood: 200, owners: ['Matilda'] },
-  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
-  { weight: 32, curFood: 340, owners: ['Michael'] }
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] }
+  
 ];
 
 //1. 
@@ -498,17 +499,39 @@ console.log(dogs);
 const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
 console.log(sarahDog);
 
-console.log(`Sarah's dog is eating Too ${sarahDog.curFood>sarahDog.recFood?'Much':'Little'}`);
+console.log(`Sarah's dog is eating Too ${sarahDog.curFood > sarahDog.recFood ? 'Much' : 'Little'}`);
 
 //3. 
-const ownerTooMuch = dogs.filter(dog => dog.curFood > dog.recFood);
-const ownerTooLittle = dogs.filter(dog => dog.curFood < dog.recFood);
-console.log(ownerTooMuch);
-console.log(ownerTooLittle);
+const dogTooMuch = dogs.filter(dog => dog.curFood > dog.recFood);
+const dogTooLittle = dogs.filter(dog => dog.curFood < dog.recFood);
+console.log(dogTooMuch);
+console.log(dogTooLittle);
 
 //4.
+const ownerTooMuch = dogTooMuch.map(dog => dog.owners);
+const ownerTooLittle = dogTooLittle.map(dog => dog.owners);;
+console.log(`${ownerTooMuch.flat().join(' and ')}'s dogs eat too much.`);
+console.log(`${ownerTooLittle.flat().join(' and ')}'s dogs eat too little.`);
 
+//5.
+console.log(Boolean(dogs.find(dog => dog.curFood == dog.recFood)));
+
+//6.
+console.log(Boolean(dogs.find(dog => (dog.curFood < dog.recFood * 1.1) && (dog.curFood > dog.recFood * 0.9))));
+
+//7.
+console.log(dogs.filter(dog => 
+  (dog.curFood < dog.recFood + dog.recFood * 0.1)
+  && (dog.curFood > dog.recFood - dog.recFood * 0.1)));
+
+//8.
+const copyDogSorted = [].concat(dogs);
+console.log(dogs);
+console.log(copyDogSorted.sort((a,b)=>{
+  if(a.curFood > b.curFood) return 1;
+  else return -1;
+}));
 
 // CHALLENGE 4 COMPLETED
 
-// */
+*/
